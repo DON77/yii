@@ -67,7 +67,7 @@ class OrdersController extends Controller {
                 $model->order_id = $last_order_id;
                 $model->price = $order['price'];
                 $model->description = $order['descr'];
-                $model->available = $order['available'];
+                $model->available = (int)$order['available'];
                 if (!$model->save()) {print_r($model->getErrors());die;
                     return $this->render('create', [
                                 'model' => $model,
