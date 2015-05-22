@@ -90,23 +90,25 @@ class OrdersController extends Controller {
      */
     public function actionUpdate($id) {
         $order_ = Orders::findOne(['id'=>$id]);
-        $orders = Orders::find(['order_id'=>$order_->order_id]);
+        $orders = Orders::findAll(['order_id'=>$order_->order_id]);
+        
 
-        $post = Yii::$app->request->post('orders');
+        $post = Yii::$app->request->post('Orders');
         if(!empty($post))
         {
-            foreach($post as $row)
+           // echo "<pre>";            var_dump($post); die;
+            foreach($post as $id => $row)
             {
-                $order = Orders::findOne(['id'=>$row->id]);
-                $order->price = $order['price'];
-                $order->description = $order['descr'];
-                $order->available = (int)$order['available'];
+                $order = Orders::findOne(['id'=>$id]);
+                $order->price = $row['price'];
+                $order->description = $row['description'];
+                $order->available = (int)$row['available'];
                 $order->save();
             }
             $this->redirect('/orders/index');
         }
         return $this->render('update', [
-            'model' => $orders,
+            'orders' => $orders,
         ]);
     }
 

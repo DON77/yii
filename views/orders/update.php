@@ -5,6 +5,7 @@
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Orders */
+    /* @var $form  ActiveForm */
 
 $this->title = 'Update Orders: ' . ' ' . $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Orders', 'url' => ['index']];
@@ -15,25 +16,23 @@ $this->params['breadcrumbs'][] = 'Update';
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <?= $this->render('_form', [
-        'model' => $row,
-    ]) ?>
+   
 
-
-    <?php $form = ActiveForm::begin(); ?>
-    <?php foreach($rows as $i=>$model):?>
+    <?php $form = ActiveForm::begin();  ?>
+    <?php foreach($orders as $i=>$model): 
+        ?>
     <div class="orders-container">
         <div class="order-container" data-counter="0">
             <?php // $form->field($model, 'order_id')->textInput() ?>
             <div class="orders-item">
-                <?= $form->field($model, "price")->textInput(['maxlength' => true, 'class' => "order-item form-control", 'placeholder' => 'Please add price of item...']) ?>
+                <?= $form->field($model, "[$model->id]price")->textInput() ; ?>
             </div>
             <div class="orders-item">
-                <?= $form->field($model, "description")->textInput(['maxlength' => true, 'class' => "order-item form-control", 'placeholder' => 'Please add description of item...']) ?>
+                <?= $form->field($model, "[$model->id]description")->textInput() ?>
             </div>
             <div class="orders-item">
                 <?=
-                    $form->field($model, "available")->dropDownList(['Pick an option',
+                    $form->field($model, "[$model->id]available")->dropDownList(['Pick an option',
                         '0' => 'Not Available',
                         '1' => 'Available'])
                 ?>
@@ -42,9 +41,10 @@ $this->params['breadcrumbs'][] = 'Update';
     </div>
     <?php endforeach;?>
     <div class="form-group">
-        <?= Html::button('Update', ['class' => 'btn btn-primary','onclick'=>'submitForm();']) ?>
+        <?= Html::submitButton('Update', ['class' => 'btn btn-primary','onclick'=>'submitForm();']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
+
 
 </div>
