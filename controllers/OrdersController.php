@@ -68,7 +68,7 @@ class OrdersController extends Controller {
                 $model->price = $order['price'];
                 $model->description = $order['descr'];
                 $model->available = (int)$order['available'];
-                if (!$model->save()) {print_r($model->getErrors());die;
+                if (!$model->save()) {
                     return $this->render('create', [
                                 'model' => $model,
                     ]);
@@ -89,15 +89,25 @@ class OrdersController extends Controller {
      * @return mixed
      */
     public function actionUpdate($id) {
-        $model = $this->findModel($id);
+        $order_ = Orders::findOne(['id'=>$id]);
+        $orders = Orders::find(['order_id'=>$order_->order_id]);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('update', [
-                        'model' => $model,
-            ]);
+        $post = Yii::$app->request->post('orders');
+        if(!empty($post))
+        {
+            foreach($post as $row)
+            {
+                $order = Orders::findOne(['id'=>$row->id]);
+                $order->price = $order['price'];
+                $order->description = $order['descr'];
+                $order->available = (int)$order['available'];
+                $order->save();
+            }
+            $this->redirect('/orders/index');
         }
+        return $this->render('update', [
+            'model' => $orders,
+        ]);
     }
 
     /**

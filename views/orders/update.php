@@ -13,9 +13,10 @@ $this->params['breadcrumbs'][] = 'Update';
 <div class="orders-update">
 
     <h1><?= Html::encode($this->title) ?></h1>
-
+    <?php foreach($rows as $row):?>
     <?= $this->render('_form', [
-        'model' => $model,
+        'model' => $row,
     ]) ?>
+    <?php endforeach;?>
 
 </div>
