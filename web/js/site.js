@@ -31,15 +31,35 @@ function removeItem(){
 function submitForm(){
     //e.preventDefault();
     var d = Array();
+    var errors = 0;
     $.each(parent.find('div.order-container'),function(i,v){
         var single = Array();
         var price = $(v).find('#orders-price').val();
         var description = $(v).find('#orders-description').val();
         var available = $(v).find('#orders-available').val();
         d.push({'price':price,'descr':description,'available':available}) ;
+
+            if(price=='' || isNaN(price))
+            {
+                errors++;
+                
+                $(v).find('#orders-price').parent().removeClass('has-success').addClass('has-error');
+            }
+            else
+                $(v).find('#orders-price').parent().removeClass('has-error').addClass('has-success');
+            if(description=='')
+            {
+                errors++;
+                $(v).find('#orders-description').parent().removeClass('has-success').addClass('has-error');
+            }
+            else
+                $(v).find('#orders-description').parent().removeClass('has-error').addClass('has-success');
+
     });
     console.log(d);
-    $.ajax({
+    if(!errors)
+    {
+        $.ajax({
         type:'POST',
         url:'/orders/create',
         data:{orders:d},
@@ -48,5 +68,7 @@ function submitForm(){
         success:function(data){
             console.log('miban');
         }
-    })
+    });
+    }
+    
 }

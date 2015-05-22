@@ -56,15 +56,24 @@ class OrdersController extends Controller {
      * @return mixed
      */
     public function actionCreate() {
+         $model = new Orders();
         if (Yii::$app->request->isAjax) {
+            $last_order = Orders::find()->orderBy(['id'=>SORT_DESC])->one();
+            $last_order_id = $last_order ? $last_order->order_id+1 : 1;
             $orders = Yii::$app->request->post('orders');
             foreach ($orders as $order) {
+                $order['order_id'] = $last_order_id;
                 $model = new Orders();
-                if (!$model->load($order) || !$model->save()) {
-
+                $model->order_id = $last_order_id;
+                $model->price = $order['price'];
+                $model->description = $order['descr'];
+                $model->available = $order['available'];
+                if (!$model->save()) {print_r($model->getErrors());die;
                     return $this->render('create', [
                                 'model' => $model,
                     ]);
+                }else {
+                    $this->redirect('/orders/index');
                 }
             }
         }
